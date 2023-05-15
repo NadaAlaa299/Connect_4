@@ -6,14 +6,14 @@ class Board:
     def __init__(self):
         self.board = [['-' for _ in range(COLS)] for _ in range(ROWS)]
         self.empty_pos = []
+        self.winPos = []
 
-    def print_board(self):
-        for row in range(ROWS):
-            print(self.board[row])
 
     def is_empty(self, player, cols):
         # Loop to check if the tile is empty
-        for i in range(5, -1, -1):
+        if self.board[5][cols] != '-':
+            return False
+        for i in range(0, 6, 1):
             if self.board[i][cols] == '-':
                 self.board[i][cols] = player
                 return True
@@ -51,6 +51,7 @@ class Board:
                 if self.board[i][j] == self.board[i + 1][j + 1] == self.board[i + 2][j + 2] == self.board[i + 3][
                     j + 3] != '-':
                     return self.board[i][j]
+
                 elif self.board[i][j] == self.board[i + 1][j - 1] == self.board[i + 2][j - 2] == self.board[i + 3][
                     j - 3] != '-':
                     return self.board[i][j]
@@ -81,7 +82,7 @@ class Board:
     def get_empty_pos(self):
         self.empty_pos.clear()
         for col in range(COLS):
-            for row in range(ROWS - 1, -1, -1):
+            for row in range(0, 6, 1):
                 if self.board[row][col] == '-':
                     self.empty_pos.append((row, col))
                     break
@@ -97,5 +98,3 @@ class Board:
                     return False
         return True
 
-
-Board().print_board()
