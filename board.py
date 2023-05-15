@@ -1,13 +1,15 @@
 from const import *
 import random
+
+
 class Board:
     def __init__(self):
-        self.board = [['-' for j in range(COLS)] for i in range(ROWS)]
+        self.board = [['-' for _ in range(COLS)] for _ in range(ROWS)]
         self.empty_pos = []
 
     def print_board(self):
-        for rows in self.board:
-            print(' | '.join(rows))
+        for row in range(ROWS):
+            print(self.board[row])
 
     def is_empty(self, player, cols):
         # Loop to check if the tile is empty
@@ -17,6 +19,14 @@ class Board:
                 return True
 
         return False
+
+
+    def copy_val(self):
+        copy_board = [['-' for _ in range(COLS)] for _ in range(ROWS)]
+        for row in range(ROWS):
+            for col in range(COLS):
+                copy_board[row][col] = self.board[row][col]
+        return copy_board
 
     def is_winning(self):
         # search in rows
@@ -38,14 +48,16 @@ class Board:
         # search in diagonals
         for i in range(3):
             for j in range(4):
-                if self.board[i][j] == self.board[i + 1][j + 1] == self.board[i + 2][j + 2] == self.board[i + 3][j + 3] != '-':
+                if self.board[i][j] == self.board[i + 1][j + 1] == self.board[i + 2][j + 2] == self.board[i + 3][
+                    j + 3] != '-':
                     return self.board[i][j]
-                elif self.board[i][j] == self.board[i + 1][j - 1] == self.board[i + 2][j - 2] == self.board[i + 3][j - 3] != '-':
+                elif self.board[i][j] == self.board[i + 1][j - 1] == self.board[i + 2][j - 2] == self.board[i + 3][
+                    j - 3] != '-':
                     return self.board[i][j]
         return 0
 
     def player_turn(self, player):
-        if player == '#':
+        if player == 'x':
             colms = random.randint(0, 6)
             print("Computer chooses column:", colms)
         else:
@@ -57,17 +69,33 @@ class Board:
             print("Column is full. Try again.")
             return self.player_turn(player)
 
-    def get_empty_pos(self):
-        pass
+    def play(self, player):
+        col = int(input("Player " + player + ", choose a column (0-6): "))
+        if col < 0 or col >= COLS:
+            print("Invalid column. Try again.")
+            return self.play(player)
+        elif not self.is_empty(player, col):
+            print("Column is full. Try again.")
+            return self.play(player)
 
+    def get_empty_pos(self):
+        self.empty_pos.clear()
+        for col in range(COLS):
+            for row in range(ROWS - 1, -1, -1):
+                if self.board[row][col] == '-':
+                    self.empty_pos.append((row, col))
+                    break
+        return self.empty_pos
+
+    def mark_pos(self, row, col, player):
+        self.board[row][col] = player
 
     def is_full(self):
         for row in range(ROWS):
             for col in range(COLS):
                 if self.board[row][col] == '-':
-                   return False
+                    return False
         return True
-
 
 
 Board().print_board()
