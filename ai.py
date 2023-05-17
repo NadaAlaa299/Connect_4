@@ -39,7 +39,7 @@ class AI:
             for (row, col) in empty_pos:
                 temp_board.board = board.copy_val()
                 temp_board.mark_pos(row, col, 'x')
-                evaluation = self.minimax(temp_board, False, depth - 1, alpha, beta)[0]
+                evaluation = self.minimax(temp_board, False, depth - 1, alpha - 1, beta)[0]
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = (row, col)
@@ -73,18 +73,22 @@ class AI:
 
             return min_eval, best_move
 
-    def evaluate(self, main_board,depth):
+    def evaluate(self, main_board, depth):
         temp_board = main_board.copy_val()
         evaluation, move = self.minimax(main_board, False, depth, -100, 100)
         print(f'move: {move} and the evaluation: {evaluation}')
         return move, temp_board
 
+    def evaluateForX(self, main_board, depth):
+        temp_board = main_board.copy_val()
+        evaluation, move = self.minimax(main_board, True, depth, -100, 100)
+        print(f'move: {move} and the evaluation: {evaluation}')
+        return move, temp_board
     def randAi(self, board):
         emptyPositions=board.get_empty_pos()
         row, col = random.choice(emptyPositions)
 
         return [row, col]
-
 
 
 

@@ -65,7 +65,7 @@ class Game:
 
         while True:
               if not self.game_over :
-                    pos, temp_board = ai1.evaluate(self.board,3)
+                    pos, temp_board = ai1.evaluateForX(self.board,3)
                     self.board.board = temp_board
                     self.board.mark_pos(pos[0], pos[1], 'x')
                     if self.board.is_winning():
