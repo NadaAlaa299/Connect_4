@@ -1,4 +1,3 @@
-import copy
 from board import Board
 
 
@@ -8,7 +7,7 @@ class AI:
         self.level = level
         self.player = player
 
-    def minimax(self, board, maximizing, depth):
+    def minimax(self, board, maximizing, depth, alpha, beta):
         # Base case
 
 
@@ -38,10 +37,14 @@ class AI:
             for (row, col) in empty_pos:
                 temp_board.board = board.copy_val()
                 temp_board.mark_pos(row, col, 'x')
-                evaluation = self.minimax(temp_board, False, depth + 1)[0]
+                evaluation = self.minimax(temp_board, False, depth + 1, alpha, beta)[0]
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = (row, col)
+
+                alpha = max(alpha, max_eval)
+                if beta <= alpha:
+                    break  # Beta cutoff
 
             return max_eval, best_move
 
@@ -55,19 +58,22 @@ class AI:
                 #print(col)
                 #print(row)
                 temp_board.mark_pos(row, col, 'o')
-                evaluation = self.minimax(temp_board, True, depth + 1)[0]
+                evaluation = self.minimax(temp_board, True, depth + 1, alpha, beta)[0]
                 if evaluation < min_eval:
                     min_eval = evaluation
                     best_move = (row, col)
+                beta = min(beta, min_eval)
+                if beta <= alpha:
+                    break  # Alpha cutoff
 
-                   #print(min_eval)
-                    #print(best_move)
+                #print(min_eval)
+                   #print(best_move)
 
             return min_eval, best_move
 
     def evaluate(self, main_board):
         temp_board = main_board.copy_val()
-        evaluation, move = self.minimax(main_board, False, 0)
+        evaluation, move = self.minimax(main_board, False, 0, -100, 100)
         print(f'move: {move} and the evaluation: {evaluation}')
 
         return move, temp_board
