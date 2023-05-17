@@ -51,10 +51,13 @@ class Board:
                 if self.board[i][j] == self.board[i + 1][j + 1] == self.board[i + 2][j + 2] == self.board[i + 3][
                     j + 3] != '-':
                     return self.board[i][j]
+        for i in range(COLS-3):
+            for j in range(3, ROWS):
+                if self.board[j][i] == self.board[j - 1][i + 1] == self.board[j - 2][i + 2] == self.board[j - 3][
+                    i + 3] != '-':
+                    return self.board[j][i]
 
-                elif self.board[i][j] == self.board[i + 1][j - 1] == self.board[i + 2][j - 2] == self.board[i + 3][
-                    j - 3] != '-':
-                    return self.board[i][j]
+
         return 0
 
     def player_turn(self, player):
@@ -97,4 +100,11 @@ class Board:
                 if self.board[row][col] == '-':
                     return False
         return True
+
+    def print_board(self):
+        for row in range(ROWS):
+            for col in range(COLS):
+                print(self.board[row][col], end=' ')
+            print()
+        print()
 

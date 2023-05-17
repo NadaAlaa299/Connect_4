@@ -92,13 +92,13 @@ class Home:
                 if event.type == pg.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos
                     if self.home_screen_text_rect1.collidepoint(mouse_pos):
-                        level = 1
+                        level = 0
                     elif self.home_screen_text_rect2.collidepoint(mouse_pos):
-                        level = 5
+                        level = 1
                     elif self.home_screen_text_rect3.collidepoint(mouse_pos):
-                        level = 100
+                        level = 2
                     elif self.home_screen_text_rect4.collidepoint(mouse_pos):
-                        level = 5000
+                        level = 3
                     game_board = Board()
                     connect4 = Game(game_board, level)
                     while not connect4.game_over:
