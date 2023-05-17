@@ -60,12 +60,12 @@ class Game:
         self.draw_board(self.p1_score, self.p2_score)
         pg.display.update()
         ai1 = AI(self.level, 'x')
-        ai2 = AI(self.level, 'o')
-
-
+        ai2 = AI(self.level)
+        firstTime=True
         while True:
               if not self.game_over :
-                    pos, temp_board = ai1.evaluateForX(self.board,3)
+                    pos, temp_board = ai1.evaluateForX(self.board,3,firstTime)
+                    firstTime=False
                     self.board.board = temp_board
                     self.board.mark_pos(pos[0], pos[1], 'x')
                     if self.board.is_winning():
@@ -85,7 +85,7 @@ class Game:
                         self.draw_board(self.p1_score, self.p2_score)
                         pg.display.update()
 
-                    pg.time.wait(2000)
+                    pg.time.wait(500)
               if not self.game_over :
                     if self.level==0:
                         pos=ai2.randAi(self.board)
@@ -108,7 +108,7 @@ class Game:
                         pg.display.update()
                     self.draw_board(self.p1_score, self.p2_score)
                     pg.display.update()
-                    pg.time.wait(2000)
+                    pg.time.wait(500)
                     if self.board.is_full():
                         label = myfont.render("Draw", True,
                                               BLUE)
@@ -120,6 +120,7 @@ class Game:
                         pg.time.wait(2000)
                         self.game_over = False
                         self.board=Board()
+                        firstTime=False
                         self.draw_board(self.p1_score, self.p2_score)
                         pg.draw.rect(self.screen, BLACK, (0, 0, WIDTH, SQ_SIZE))
                         pg.display.update()
