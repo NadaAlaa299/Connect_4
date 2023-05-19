@@ -118,4 +118,12 @@ class Game:
                 self.draw_board(self.p1_score, self.p2_score)
                 pg.draw.rect(self.screen, BLACK, (0, 0, WIDTH, SQ_SIZE))
                 pg.display.update()
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    quit()
+                # if event.type == pg.MOUSEBUTTONDOWN:
+                #     if self.back_rect.collidepoint(event.pos):
+                #         self.backHome = True
+                #         return
 
