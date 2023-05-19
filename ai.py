@@ -1,11 +1,9 @@
 import random
-
+from const import *
 from board import Board
 
-ROW_COUNT = 6
-COLUMN_COUNT = 7
-AI_PIECE = 'x'
-PLAYER_PIECE = 'o'
+AI_PIECE = 'o'
+PLAYER_PIECE = 'x'
 EMPTY = '-'
 
 
@@ -146,15 +144,16 @@ class AI:
             return 1, None  # eval, move
 
         # player 2 wins
-        if case == 'o':
+        elif case == 'o':
             return -1, None
+
 
         # draw
         if board.is_full():
             return 0, None
 
         if (depth == 0):
-            return score_position(board.board, self.player), None
+            return self.scoreCalc(board.board, self.player), None
 
         if maximizing:
             temp_board = Board()
@@ -221,49 +220,49 @@ class AI:
     def reset_node_count(self):
         self.node_count = 0
 
+    def scoreCalc(self, board, player):
+        totalScore = 0
+        # vertical
+        for col in range(COLS):
+            for row in range(ROWS - 3):
+                collection = [board[row][col], board[row + 1][col], board[row + 2][col], board[row + 3][col]]
+                totalScore += self.getCollectionScore(collection, player)
+        # horizontal
+        for row in range(ROWS):
+            for col in range(COLS - 3):
+                collection = [board[row][col], board[row][col + 1], board[row][col + 2], board[row][col + 3]]
+                totalScore += self.getCollectionScore(collection, player)
+        # negative diagonal
+        for row in range(ROWS - 3):
+            for col in range(COLS - 3):
+                collection = [board[row+3][col], board[row+2][col+1], board[row+1][col+2], board[row][col+3]]
+                totalScore += self.getCollectionScore(collection, player)
+        # positive diagonal
+        for row in range(ROWS - 3):
+            for col in range(COLS - 3):
+                collection = [board[row][col], board[row+1][col+1], board[row+2][col+2], board[row+3][col+3]]
+                totalScore += self.getCollectionScore(collection, player)
+        return totalScore
 
-def score_position(board, piece):
-    score = 0
-
-    # Evaluate rows
-    for row in range(ROW_COUNT):
-        for col in range(COLUMN_COUNT - 3):
-            window = board[row][col:col + 4]
-            score += evaluate_window(window, piece)
-
-    # Evaluate columns
-    for col in range(COLUMN_COUNT):
-        for row in range(ROW_COUNT - 3):
-            window = [board[i][col] for i in range(row, row + 4)]
-            score += evaluate_window(window, piece)
-
-    # Evaluate diagonals (positive slope)
-    for row in range(ROW_COUNT - 3):
-        for col in range(COLUMN_COUNT - 3):
-            window = [board[row + i][col + i] for i in range(4)]
-            score += evaluate_window(window, piece)
-
-    # Evaluate diagonals (negative slope)
-    for row in range(ROW_COUNT - 3):
-        for col in range(COLUMN_COUNT - 3):
-            window = [board[row + 3 - i][col + i] for i in range(4)]
-            score += evaluate_window(window, piece)
-
-    return score
+    def getCollectionScore(self, collection, player):
+        totalScore = 0
+        if player == 'x':
+            player2 = 'o'
+        else:
+            player2 = 'x'
+        if collection.count(player) == 4:
+            totalScore += 100
+        elif collection.count(player) == 3 and collection.count('-') == 1:
+            totalScore += 10
+        elif collection.count(player) == 2 and collection.count('-') == 2:
+            totalScore += 5
+        if collection.count(player2) == 3 and collection.count('-') == 1:
+            totalScore -= 5
+        elif collection.count(player2) == 2 and collection.count('-') == 2:
+            totalScore -= 2
+        elif collection.count(player2) == 1 and collection.count('-') == 3:
+            totalScore -= 1
+        return totalScore
 
 
-def evaluate_window(window, piece):
-    score = 0
-    opp_piece = PLAYER_PIECE if piece == AI_PIECE else AI_PIECE
 
-    if window.count(piece) == 4:
-        score += 100
-    elif window.count(piece) == 3 and window.count(EMPTY) == 1:
-        score += 5
-    elif window.count(piece) == 2 and window.count(EMPTY) == 2:
-        score += 2
-
-    if window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
-        score -= 4
-
-    return score
