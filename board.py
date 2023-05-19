@@ -8,7 +8,6 @@ class Board:
         self.empty_pos = []
         self.winPos = []
 
-
     def is_empty(self, player, cols):
         # Loop to check if the tile is empty
         if self.board[5][cols] != '-':
@@ -19,7 +18,6 @@ class Board:
                 return True
 
         return False
-
 
     def copy_val(self):
         copy_board = [['-' for _ in range(COLS)] for _ in range(ROWS)]
@@ -51,12 +49,11 @@ class Board:
                 if self.board[i][j] == self.board[i + 1][j + 1] == self.board[i + 2][j + 2] == self.board[i + 3][
                     j + 3] != '-':
                     return self.board[i][j]
-        for i in range(COLS-3):
+        for i in range(COLS - 3):
             for j in range(3, ROWS):
                 if self.board[j][i] == self.board[j - 1][i + 1] == self.board[j - 2][i + 2] == self.board[j - 3][
                     i + 3] != '-':
                     return self.board[j][i]
-
 
         return 0
 
@@ -107,4 +104,3 @@ class Board:
                 print(self.board[row][col], end=' ')
             print()
         print()
-

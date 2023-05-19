@@ -16,6 +16,7 @@ class AI:
         self.player = player
         self.node_count = 0
 
+    # The minimax algorithm
     def minimax(self, board, maximizing, depth):
         self.node_count += 1
         # Base case
@@ -72,6 +73,67 @@ class AI:
 
             return min_eval, best_move
 
+    # The Alpha-Beta pruning
+    def alpha_beta(self, board, maximizing, depth, alpha, beta):
+        self.node_count += 1
+
+        # Base case
+        case = board.is_winning()
+
+        #   player 1 wins
+        if case == 'x':
+            return 1, None  # eval, move
+
+        # player 2 wins
+        if case == 'o':
+            return -1, None
+
+        # draw
+        elif board.is_full() or depth == 6:
+            return 0, None
+
+        if maximizing:
+            temp_board = Board()
+            max_eval = -2
+            best_move = None
+            empty_pos = board.get_empty_pos()
+
+            for (row, col) in empty_pos:
+                temp_board.board = board.copy_val()
+                temp_board.mark_pos(row, col, 'x')
+                evaluation = self.alpha_beta(temp_board, False, depth + 1, alpha, beta)[0]
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_move = (row, col)
+
+                alpha = max(alpha, max_eval)
+                if beta <= alpha:
+                    break  # Beta cutoff
+
+            return max_eval, best_move
+
+        elif not maximizing:
+            temp_board = Board()
+            min_eval = 2
+            best_move = None
+            empty_pos = board.get_empty_pos()
+            for (row, col) in empty_pos:
+                temp_board.board = board.copy_val()
+                # print(col)
+                # print(row)
+                temp_board.mark_pos(row, col, 'o')
+                evaluation = self.alpha_beta(temp_board, True, depth + 1, alpha, beta)[0]
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_move = (row, col)
+                beta = min(beta, min_eval)
+                if beta <= alpha:
+                    break  # Alpha cutoff
+
+
+            return min_eval, best_move
+
+    # This is minimax alpha beta with one additional factor to make it more realistic
     def minimax_alpha_beta(self, board, maximizing, depth, alpha, beta):
         self.node_count += 1
         # Base case
@@ -138,7 +200,7 @@ class AI:
 
     def evaluate(self, main_board, depth):
         temp_board = main_board.copy_val()
-        evaluation, move = self.minimax(main_board, False, depth, -100, 100)
+        evaluation, move = self.minimax_alpha_beta(main_board, False, depth, -100, 100)
         print(f'move: {move} and the evaluation: {evaluation}')
         return move, temp_board
 
@@ -147,7 +209,7 @@ class AI:
         temp_board = main_board.copy_val()
         if first_move:
             return self.randAi(main_board), temp_board
-        evaluation, move = self.minimax(main_board, True, depth,-100, 100)
+        evaluation, move = self.minimax_alpha_beta(main_board, True, depth, -100, 100)
         print(f'move: {move} and the evaluation: {evaluation}')
         return move, temp_board
 

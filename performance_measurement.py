@@ -6,38 +6,44 @@ from board import Board
 ai = AI()
 main_board = Board()
 
+
 def measure_execution_time_minmax(board, algorithm):
     start_time = time.time()
     algorithm(board, maximizing=True, depth=3)
     end_time = time.time()
     return end_time - start_time
 
+
 def measure_execution_time_alph_beta(board, algorithm):
     start_time = time.time()
     algorithm(board, maximizing=True, depth=3, alpha=-100, beta=100)
     end_time = time.time()
     return end_time - start_time
+
+
 # Number of nodes expanded
 def count_nodes_expanded_alpha_beta(board, algorithm):
     algorithm(board, maximizing=True, depth=3, alpha=-100, beta=100)
     return ai.node_count
 
+
 def count_nodes_expanded_minimax(board, algorithm):
     algorithm(board, maximizing=True, depth=3)
     return ai.node_count
 
+
 # Measure execution time
 execution_time_minimax = measure_execution_time_minmax(main_board, ai.minimax)
-execution_time_minimax_alpha_beta = measure_execution_time_alph_beta(main_board, ai.minimax_alpha_beta)
+execution_time_minimax_alpha_beta = measure_execution_time_alph_beta(main_board, ai.alpha_beta)
 
 # Count nodes expanded
 ai.reset_node_count()
 nodes_expanded_minimax = count_nodes_expanded_minimax(main_board, ai.minimax)
 ai.reset_node_count()
-nodes_expanded_minimax_alpha_beta = count_nodes_expanded_alpha_beta(main_board, ai.minimax_alpha_beta)
+nodes_expanded_minimax_alpha_beta = count_nodes_expanded_alpha_beta(main_board, ai.alpha_beta)
 
 # Plot the results in one figure
-labels = ['Minimax', 'Minimax with Alpha-Beta Pruning']
+labels = ['Minimax', 'Alpha-Beta Pruning']
 execution_times = [execution_time_minimax, execution_time_minimax_alpha_beta]
 nodes_expanded = [nodes_expanded_minimax, nodes_expanded_minimax_alpha_beta]
 
