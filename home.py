@@ -1,3 +1,5 @@
+import sys
+
 import pygame as pg
 
 from board import Board
@@ -53,7 +55,7 @@ class Home:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
-                    quit()
+                    sys.exit()
                 if event.type == pg.MOUSEMOTION:
                     mouse_pos = event.pos
                     if self.home_screen_text_rect1.collidepoint(mouse_pos):
@@ -106,7 +108,7 @@ class Home:
                         if connect4.backHome:
                             break
                         if connect4.game_over:
-                            connect4.board =Board()
+                            connect4.board = Board()
                             connect4.game_over = False
                             continue
             pg.display.flip()

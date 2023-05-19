@@ -1,5 +1,5 @@
 import pygame as pg
-
+import sys
 from ai import AI
 from board import Board
 from const import *
