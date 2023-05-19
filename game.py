@@ -13,8 +13,9 @@ class Game:
         self.screen = None
         self.board = board
         self.game_over = False
-        self.back_rect = None
         self.backHome = False
+        self.back_surf = None
+        self.back_rect = None
 
     def draw_board(self, p1_score, p2_score):
 
@@ -44,8 +45,12 @@ class Game:
         self.screen.fill(BLACK, (0, SH - SQ_SIZE, WIDTH, HEIGHT))
         p1_surf = font.render("Computer: {}".format(p1_score), True, RED)
         p2_surf = font.render("Agent: {}".format(p2_score), True, YELLOW)
+
         self.screen.blit(p1_surf, (SQ_SIZE - 30, SW + 10))
         self.screen.blit(p2_surf, (WIDTH - SQ_SIZE - p2_surf.get_width(), SW + 10))
+        self.back_surf = font.render("Back", True, WHITE)
+        self.back_rect = self.back_surf.get_rect(center=(WIDTH//2, SW + 40))
+        self.screen.blit(self.back_surf, self.back_rect)
 
     def run(self):
         pg.init()
@@ -122,8 +127,8 @@ class Game:
                 if event.type == pg.QUIT:
                     pg.quit()
                     quit()
-                # if event.type == pg.MOUSEBUTTONDOWN:
-                #     if self.back_rect.collidepoint(event.pos):
-                #         self.backHome = True
-                #         return
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if self.back_rect.collidepoint(event.pos):
+                        self.backHome = True
+                        return
 
