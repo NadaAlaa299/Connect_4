@@ -45,7 +45,7 @@ To enable the AI player, modify the `AI_PLAYER_ENABLED` constant in the `const.p
 
 ## Credits
 
-| Name | ID |  Section  |
+| Name | ID |  Section  |GitHub
 | --- | --- | --- | 
 | Mohamed Sayed Ali | 20200450 | CS S6-S7 |@moGaara
 | Mohamed Yasser Shehta | 20200484 | CS S5 |@newYasser
